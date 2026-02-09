@@ -1,8 +1,8 @@
 # Modern Makefile with pkg-config and automatic dependency generation
 
-CC := clang
-CFLAGS := -std=c23 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP
-LDFLAGS := $(shell pkg-config --libs ncurses 2>/dev/null || echo -lncurses)
+CC ?= clang
+CFLAGS ?= -std=c23 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP
+LDFLAGS ?= $(shell pkg-config --libs ncurses 2>/dev/null || echo -lncurses)
 CFLAGS += $(shell pkg-config --cflags ncurses 2>/dev/null)
 
 TARGET := fildel
