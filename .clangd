@@ -1,0 +1,5 @@
+CompileFlags:
+  Add: [-std=c23, -Wall, -Wextra, -Wpedantic]
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
