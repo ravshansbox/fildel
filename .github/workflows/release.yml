@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-amd64
+          - os: macos-latest
+            target: darwin-amd64
+          - os: macos-14
+            target: darwin-arm64
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt-get update && sudo apt-get install -y libncurses5-dev
+
+    - name: Build
+      run: make
+
+    - name: Package
+      run: |
+        mkdir -p dist
+        cp fildel README.md dist/
+        cd dist
+        tar czf fildel-${{ matrix.target }}.tar.gz fildel README.md
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fildel-${{ matrix.target }}
+        path: dist/fildel-${{ matrix.target }}.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        pattern: fildel-*
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/**/*.tar.gz
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
