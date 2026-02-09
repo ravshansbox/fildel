@@ -33,6 +33,12 @@ check: $(TARGET)
 	@echo "Running basic test..."
 	@./$(TARGET) --help 2>/dev/null || echo "(no --help, expected)"
 
+install: $(TARGET)
+	install -m 755 $(TARGET) /usr/local/bin/
+
+uninstall:
+	rm -f /usr/local/bin/$(TARGET)
+
 clean:
 	rm -f $(OBJS) $(DEPS) $(TARGET)
 
