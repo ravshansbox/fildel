@@ -32,11 +32,17 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install ncurses pkg-config
-        echo "PKG_CONFIG_PATH=$(brew --prefix)/opt/ncurses/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
-        echo "CFLAGS=-I$(brew --prefix)/opt/ncurses/include" >> $GITHUB_ENV
-        echo "LDFLAGS=-L$(brew --prefix)/opt/ncurses/lib" >> $GITHUB_ENV
 
-    - name: Build
+    - name: Build (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        export PKG_CONFIG_PATH="$(brew --prefix)/opt/ncurses/lib/pkgconfig:$PKG_CONFIG_PATH"
+        export CFLAGS="-I$(brew --prefix)/opt/ncurses/include"
+        export LDFLAGS="-L$(brew --prefix)/opt/ncurses/lib"
+        make
+
+    - name: Build (Linux)
+      if: runner.os == 'Linux'
       run: make
 
     - name: Package
