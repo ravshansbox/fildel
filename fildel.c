@@ -241,11 +241,46 @@ static void draw_ui(void) {
     }
     
     attron(A_DIM);
-    mvprintw(max_y - 1, 0, "%zu/%zu lines | arrows:navigate SPACE:select d:delete w:save q:quit", 
+    mvprintw(max_y - 1, 0, "%zu/%zu lines | arrows:navigate SPACE:select d:delete r:reverse w:save q:quit", 
              filtered.count, buffer.count);
     attroff(A_DIM);
     
     refresh();
+}
+
+static int compare_lines(const void *a, const void *b) {
+    const Line *la = *(const Line **)a;
+    const Line *lb = *(const Line **)b;
+    return strcmp(lb->text, la->text);
+}
+
+static int compare_lines_forward(const void *a, const void *b) {
+    const Line *la = *(const Line **)a;
+    const Line *lb = *(const Line **)b;
+    return strcmp(la->text, lb->text);
+}
+
+static void sort_lines(int reverse) {
+    if (buffer.count < 2) return;
+
+    Line **temp = malloc(buffer.count * sizeof(Line *));
+    for (size_t i = 0; i < buffer.count; i++) {
+        temp[i] = &buffer.lines[i];
+    }
+
+    qsort(temp, buffer.count, sizeof(Line *), reverse ? compare_lines : compare_lines_forward);
+
+    Line *new_lines = calloc(buffer.capacity, sizeof(Line));
+    for (size_t i = 0; i < buffer.count; i++) {
+        new_lines[i] = *temp[i];
+    }
+
+    free(buffer.lines);
+    buffer.lines = new_lines;
+    free(temp);
+
+    modified = 1;
+    needs_filter = 1;
 }
 
 static int confirm_quit(void) {
@@ -304,7 +339,8 @@ int main(int argc, char *argv[]) {
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
-    
+
+    sort_lines(1);
     apply_filter();
     
     int running = 1;
@@ -379,6 +415,11 @@ int main(int argc, char *argv[]) {
                 } else {
                     delete_line(cursor_pos);
                 }
+                break;
+                
+            case 'r':
+            case 'R':
+                sort_lines(0);
                 break;
                 
             case KEY_BACKSPACE:
