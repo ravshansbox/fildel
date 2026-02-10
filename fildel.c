@@ -5,6 +5,10 @@
 #include <ctype.h>
 #include <ncurses.h>
 
+#ifndef VERSION
+#define VERSION "1.3.0"
+#endif
+
 #define INITIAL_CAPACITY 1024
 #define MAX_LINE_LEN 8192
 
@@ -325,7 +329,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (strcmp(argv[1], "--version") == 0) {
-        printf("fildel 1.2.0\n");
+        printf("fildel %s\n", VERSION);
         return 0;
     }
 

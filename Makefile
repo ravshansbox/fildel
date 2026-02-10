@@ -1,7 +1,8 @@
 # Modern Makefile with pkg-config and automatic dependency generation
 
 CC ?= clang
-CFLAGS ?= -std=c11 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP
+VERSION ?= $(shell git describe --tags --always 2>/dev/null || echo "dev")
+CFLAGS ?= -std=c11 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP -DVERSION=\"$(VERSION)\"
 LDFLAGS ?= $(shell pkg-config --libs ncurses 2>/dev/null || echo -lncurses)
 CFLAGS += $(shell pkg-config --cflags ncurses 2>/dev/null)
 
