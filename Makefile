@@ -1,7 +1,7 @@
 # Modern Makefile with pkg-config and automatic dependency generation
 
 CC ?= clang
-CFLAGS ?= -std=c23 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP
+CFLAGS ?= -std=c11 -Wall -Wextra -Wpedantic -Wshadow -O2 -MMD -MP
 LDFLAGS ?= $(shell pkg-config --libs ncurses 2>/dev/null || echo -lncurses)
 CFLAGS += $(shell pkg-config --cflags ncurses 2>/dev/null)
 
@@ -23,10 +23,10 @@ $(TARGET): $(OBJS)
 # Include auto-generated dependencies
 -include $(DEPS)
 
-debug: CFLAGS := -std=c23 -Wall -Wextra -Wpedantic -g -O0 -fsanitize=address,undefined
+debug: CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -g -O0 -fsanitize=address,undefined
 debug: clean $(TARGET)
 
-release: CFLAGS := -std=c23 -Wall -Wextra -Wpedantic -O3 -DNDEBUG
+release: CFLAGS := -std=c11 -Wall -Wextra -Wpedantic -O3 -DNDEBUG
 release: clean $(TARGET)
 
 check: $(TARGET)
