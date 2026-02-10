@@ -324,6 +324,26 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    if (strcmp(argv[1], "--version") == 0) {
+        printf("fildel 1.2.0\n");
+        return 0;
+    }
+
+    if (strcmp(argv[1], "--help") == 0) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        printf("\n");
+        printf("Interactive file line editor with filtering.\n");
+        printf("\n");
+        printf("Keys:\n");
+        printf("  arrows/j/k    Navigate\n");
+        printf("  SPACE         Select line\n");
+        printf("  d             Delete selected or current line\n");
+        printf("  r             Toggle sort order (reverse/forward)\n");
+        printf("  w             Save file\n");
+        printf("  q             Quit\n");
+        return 0;
+    }
+
     filename = argv[1];
     
     buffer_init(&buffer);
