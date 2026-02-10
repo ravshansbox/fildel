@@ -26,7 +26,7 @@ jobs:
         brew install ncurses pkg-config
         echo "PKG_CONFIG_PATH=$(brew --prefix)/opt/ncurses/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
         echo "CFLAGS=-I$(brew --prefix)/opt/ncurses/include" >> $GITHUB_ENV
-        echo "LDFLAGS=-L$(brew --prefix)/opt/ncurses/lib" >> $GITHUB_ENV
+        echo "LDFLAGS=-L$(brew --prefix)/opt/ncurses/lib -lncurses" >> $GITHUB_ENV
 
     - name: Build
       run: make
